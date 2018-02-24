@@ -25,6 +25,34 @@ func New(year, week int) (Week, error) {
 	return Week{year: year, week: week}, nil
 }
 
+// Next calculates and returns the next week. If the next week is invalid (year > 9999) the function
+// returns an error.
+func (w *Week) Next() (Week, error) {
+	var year, week int
+
+	if w.week >= weeksInYear(w.year) {
+		year, week = w.year+1, 1
+	} else {
+		year, week = w.year, w.week+1
+	}
+
+	return New(year, week)
+}
+
+// Previous calculates and returns the previous week. If the previous week is invalid (year < 0) the
+// function returns an error.
+func (w *Week) Previous() (Week, error) {
+	var year, week int
+
+	if w.week <= 1 {
+		year, week = w.year-1, weeksInYear(w.year-1)
+	} else {
+		year, week = w.year, w.week-1
+	}
+
+	return New(year, week)
+}
+
 // UnmarshalJSON implements json.Unmarshaler for Week.
 func (w *Week) UnmarshalJSON(data []byte) error {
 

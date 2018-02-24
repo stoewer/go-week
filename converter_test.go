@@ -15,7 +15,7 @@ func TestEncodeISOWeekDate(t *testing.T) {
 		Error    bool
 	}{
 		{Year: 0, Week: 1, Expected: `0000-W01`},
-		{Year: 9999, Week: 53, Expected: `9999-W53`},
+		{Year: 9999, Week: 52, Expected: `9999-W52`},
 		{Year: 1999, Week: 21, Expected: `1999-W21`},
 		{Year: 1999, Week: 0, Error: true},
 		{Year: -1, Week: 21, Error: true},
@@ -42,10 +42,10 @@ func TestDecodeISOWeekDate(t *testing.T) {
 		Error        bool
 	}{
 		{Value: `0000-W01`, ExpectedYear: 0, ExpectedWeek: 1},
-		{Value: `9999-W53`, ExpectedYear: 9999, ExpectedWeek: 53},
+		{Value: `9999-W52`, ExpectedYear: 9999, ExpectedWeek: 52},
 		{Value: `1800-W11`, ExpectedYear: 1800, ExpectedWeek: 11},
 		{Value: `0000W01`, ExpectedYear: 0, ExpectedWeek: 1},
-		{Value: `9999W53`, ExpectedYear: 9999, ExpectedWeek: 53},
+		{Value: `9999W52`, ExpectedYear: 9999, ExpectedWeek: 52},
 		{Value: `1800W11`, ExpectedYear: 1800, ExpectedWeek: 11},
 		{Value: `18000-w11`, Error: true},
 		{Value: `0000-W00`, Error: true},

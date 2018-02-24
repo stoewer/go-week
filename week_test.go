@@ -23,6 +23,14 @@ func TestNew(t *testing.T) {
 	assert.Error(t, err)
 }
 
+func TestWeek_Next(t *testing.T) {
+
+}
+
+func TestWeek_Previous(t *testing.T) {
+
+}
+
 func TestWeek_MarshalText(t *testing.T) {
 
 	tests := []struct {
@@ -32,7 +40,7 @@ func TestWeek_MarshalText(t *testing.T) {
 	}{
 		{Week: Week{year: 1, week: 1}, Expected: "0001-W01"},
 		{Week: Week{year: 2001, week: 22}, Expected: "2001-W22"},
-		{Week: Week{year: 9999, week: 53}, Expected: "9999-W53"},
+		{Week: Week{year: 9999, week: 52}, Expected: "9999-W52"},
 		{Week: Week{year: -100, week: 22}, Error: true},
 		{Week: Week{year: 2001, week: 99}, Error: true},
 	}
@@ -58,7 +66,7 @@ func TestWeek_UnmarshalText(t *testing.T) {
 	}{
 		{Value: "0001-W01", Expected: Week{year: 1, week: 1}},
 		{Value: "2001-W22", Expected: Week{year: 2001, week: 22}},
-		{Value: "9999-W53", Expected: Week{year: 9999, week: 53}},
+		{Value: "9999-W52", Expected: Week{year: 9999, week: 52}},
 		{Value: "9999-W99", Error: true},
 	}
 
@@ -84,7 +92,7 @@ func TestWeek_MarshalJSON(t *testing.T) {
 	}{
 		{Week: Week{year: 1, week: 1}, Expected: `"0001-W01"`},
 		{Week: Week{year: 2001, week: 22}, Expected: `"2001-W22"`},
-		{Week: Week{year: 9999, week: 53}, Expected: `"9999-W53"`},
+		{Week: Week{year: 9999, week: 52}, Expected: `"9999-W52"`},
 		{Week: Week{year: 2001, week: 99}, Error: true},
 	}
 
@@ -132,7 +140,7 @@ func TestWeek_UnmarshalJSON(t *testing.T) {
 	}{
 		{Value: `"0001-W01"`, Expected: Week{year: 1, week: 1}},
 		{Value: `"2001-W22"`, Expected: Week{year: 2001, week: 22}},
-		{Value: `"9999-W53"`, Expected: Week{year: 9999, week: 53}},
+		{Value: `"9999-W52"`, Expected: Week{year: 9999, week: 52}},
 		{Value: `2001-W11`, Error: true},
 		{Value: `"9999-W99"`, Error: true},
 	}
@@ -184,7 +192,7 @@ func TestWeek_Value(t *testing.T) {
 	}{
 		{Week: Week{year: 1, week: 1}, Expected: "0001-W01"},
 		{Week: Week{year: 2001, week: 22}, Expected: "2001-W22"},
-		{Week: Week{year: 9999, week: 53}, Expected: "9999-W53"},
+		{Week: Week{year: 9999, week: 52}, Expected: "9999-W52"},
 		{Week: Week{year: -100, week: 22}, Error: true},
 		{Week: Week{year: 2001, week: 99}, Error: true},
 	}
@@ -211,7 +219,7 @@ func TestWeek_Scan(t *testing.T) {
 	}{
 		{Value: "0001-W01", Expected: Week{year: 1, week: 1}},
 		{Value: "2001-W22", Expected: Week{year: 2001, week: 22}},
-		{Value: "9999-W53", Expected: Week{year: 9999, week: 53}},
+		{Value: "9999-W52", Expected: Week{year: 9999, week: 52}},
 		{Value: "9999-W99", Error: true},
 		{Value: 500, Error: true},
 	}
