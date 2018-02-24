@@ -1,9 +1,12 @@
 package week
 
 import (
+	"database/sql/driver"
 	"encoding/json"
 	"fmt"
 	"testing"
+
+	"github.com/DATA-DOG/go-sqlmock"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -27,9 +30,9 @@ func TestWeek_MarshalText(t *testing.T) {
 		Expected string
 		Error    bool
 	}{
-		{Week: Week{year: 1, week: 1}, Expected: `0001-W01`},
-		{Week: Week{year: 2001, week: 22}, Expected: `2001-W22`},
-		{Week: Week{year: 9999, week: 53}, Expected: `9999-W53`},
+		{Week: Week{year: 1, week: 1}, Expected: "0001-W01"},
+		{Week: Week{year: 2001, week: 22}, Expected: "2001-W22"},
+		{Week: Week{year: 9999, week: 53}, Expected: "9999-W53"},
 		{Week: Week{year: -100, week: 22}, Error: true},
 		{Week: Week{year: 2001, week: 99}, Error: true},
 	}
@@ -53,10 +56,10 @@ func TestWeek_UnmarshalText(t *testing.T) {
 		Expected Week
 		Error    bool
 	}{
-		{Value: `0001-W01`, Expected: Week{year: 1, week: 1}},
-		{Value: `2001-W22`, Expected: Week{year: 2001, week: 22}},
-		{Value: `9999-W53`, Expected: Week{year: 9999, week: 53}},
-		{Value: `9999-W99`, Error: true},
+		{Value: "0001-W01", Expected: Week{year: 1, week: 1}},
+		{Value: "2001-W22", Expected: Week{year: 2001, week: 22}},
+		{Value: "9999-W53", Expected: Week{year: 9999, week: 53}},
+		{Value: "9999-W99", Error: true},
 	}
 
 	for _, tt := range tests {
@@ -170,4 +173,64 @@ func TestWeek_UnmarshalJSON(t *testing.T) {
 			}
 		}
 	})
+}
+
+func TestWeek_Value(t *testing.T) {
+
+	tests := []struct {
+		Week     Week
+		Expected string
+		Error    bool
+	}{
+		{Week: Week{year: 1, week: 1}, Expected: "0001-W01"},
+		{Week: Week{year: 2001, week: 22}, Expected: "2001-W22"},
+		{Week: Week{year: 9999, week: 53}, Expected: "9999-W53"},
+		{Week: Week{year: -100, week: 22}, Error: true},
+		{Week: Week{year: 2001, week: 99}, Error: true},
+	}
+
+	for _, tt := range tests {
+		result, err := tt.Week.Value()
+
+		if tt.Error {
+			assert.Error(t, err)
+		} else {
+			require.NoError(t, err)
+			assert.Equal(t, []byte(tt.Expected), result)
+		}
+	}
+}
+
+func TestWeek_Scan(t *testing.T) {
+	const query = `SELECT week FROM test_table ORDER BY week LIMIT 1`
+
+	tests := []struct {
+		Value    driver.Value
+		Expected Week
+		Error    bool
+	}{
+		{Value: "0001-W01", Expected: Week{year: 1, week: 1}},
+		{Value: "2001-W22", Expected: Week{year: 2001, week: 22}},
+		{Value: "9999-W53", Expected: Week{year: 9999, week: 53}},
+		{Value: "9999-W99", Error: true},
+		{Value: 500, Error: true},
+	}
+
+	for _, tt := range tests {
+		db, mock, err := sqlmock.New()
+		require.NoError(t, err)
+
+		mock.ExpectQuery(query).WillReturnRows(sqlmock.NewRows([]string{"week"}).AddRow(tt.Value))
+
+		row := db.QueryRow(query)
+
+		var week Week
+		err = row.Scan(&week)
+		if tt.Error {
+			require.Error(t, err)
+		} else {
+			require.NoError(t, err)
+			assert.Equal(t, tt.Expected, week)
+		}
+	}
 }

@@ -1,7 +1,11 @@
 // Package week provides a simple data type representing a week date as defined by ISO 8691.
 package week
 
-import "github.com/pkg/errors"
+import (
+	"database/sql/driver"
+
+	"github.com/pkg/errors"
+)
 
 // Week represents a week date as defined by ISO 8601. Week can be marshaled to and unmarshaled from
 // numerous formats such as plain text or json.
@@ -68,7 +72,7 @@ func (w *Week) UnmarshalText(data []byte) error {
 	return nil
 }
 
-// MarshalText implements TextMarshaler for Week
+// MarshalText implements TextMarshaler for Week.
 func (w Week) MarshalText() ([]byte, error) {
 
 	text, err := encodeISOWeekDate(w.year, w.week)
@@ -77,4 +81,40 @@ func (w Week) MarshalText() ([]byte, error) {
 	}
 
 	return text, nil
+}
+
+// Value implements Valuer for Week.
+func (w Week) Value() (driver.Value, error) {
+
+	text, err := encodeISOWeekDate(w.year, w.week)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to create value")
+	}
+
+	return driver.Value(text), nil
+}
+
+// Scan implements scanner for Week.
+func (w *Week) Scan(src interface{}) error {
+
+	var year int
+	var week int
+	var err error
+
+	switch val := src.(type) {
+	case string:
+		year, week, err = decodeISOWeekDate([]byte(val))
+	case []byte:
+		year, week, err = decodeISOWeekDate(val)
+	default:
+		return errors.New("unable to scan value: incompatible type")
+	}
+
+	if err != nil {
+		return errors.Wrap(err, "unable to scan value")
+	}
+
+	w.year, w.week = year, week
+
+	return nil
 }

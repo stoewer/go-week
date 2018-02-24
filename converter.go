@@ -16,18 +16,18 @@ var (
 
 // decodeISOWeekDate converts ISO week string representations such as 'YYYY-Www' and 'YYYYWww' to
 // year and week number. If the parsed year or week number is invalid an error will be returned.
-func decodeISOWeekDate(weekDate []byte) (int, int, error) {
+func decodeISOWeekDate(data []byte) (int, int, error) {
 
-	if !weekDateRegexp.Match(weekDate) {
+	if !weekDateRegexp.Match(data) {
 		return 0, 0, errWeekDateFormat
 	}
 
-	year, err := strconv.ParseInt(string(weekDate[0:4]), 10, 32)
+	year, err := strconv.ParseInt(string(data[0:4]), 10, 32)
 	if err != nil {
 		return 0, 0, errors.Wrap(err, "unable to parse year")
 	}
 
-	week, err := strconv.ParseInt(string(weekDate[len(weekDate)-2:]), 10, 32)
+	week, err := strconv.ParseInt(string(data[len(data)-2:]), 10, 32)
 	if err != nil {
 		return 0, 0, errors.Wrap(err, "unable to parse week number")
 	}
