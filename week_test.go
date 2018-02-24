@@ -25,10 +25,53 @@ func TestNew(t *testing.T) {
 
 func TestWeek_Next(t *testing.T) {
 
+	tests := []struct {
+		Curr  Week
+		Next  Week
+		Error bool
+	}{
+		{Curr: Week{year: 2003, week: 51}, Next: Week{year: 2003, week: 52}},
+		{Curr: Week{year: 2003, week: 52}, Next: Week{year: 2004, week: 1}},
+		{Curr: Week{year: 2004, week: 01}, Next: Week{year: 2004, week: 2}},
+		{Curr: Week{year: 2004, week: 52}, Next: Week{year: 2004, week: 53}},
+		{Curr: Week{year: 2004, week: 53}, Next: Week{year: 2005, week: 1}},
+		{Curr: Week{year: 9999, week: 52}, Error: true},
+	}
+
+	for _, tt := range tests {
+		prev, err := tt.Curr.Next()
+		if tt.Error {
+			assert.Error(t, err)
+		} else {
+			require.NoError(t, err)
+			assert.Equal(t, tt.Next, prev)
+		}
+	}
 }
 
 func TestWeek_Previous(t *testing.T) {
 
+	tests := []struct {
+		Curr  Week
+		Prev  Week
+		Error bool
+	}{
+		{Curr: Week{year: 2004, week: 01}, Prev: Week{year: 2003, week: 52}},
+		{Curr: Week{year: 2003, week: 52}, Prev: Week{year: 2003, week: 51}},
+		{Curr: Week{year: 2005, week: 01}, Prev: Week{year: 2004, week: 53}},
+		{Curr: Week{year: 2004, week: 53}, Prev: Week{year: 2004, week: 52}},
+		{Curr: Week{year: 0, week: 01}, Error: true},
+	}
+
+	for _, tt := range tests {
+		prev, err := tt.Curr.Previous()
+		if tt.Error {
+			assert.Error(t, err)
+		} else {
+			require.NoError(t, err)
+			assert.Equal(t, tt.Prev, prev)
+		}
+	}
 }
 
 func TestWeek_MarshalText(t *testing.T) {
