@@ -6,12 +6,12 @@
 go-week
 =======
 
-TBD
+The package `go-week` provides a simple data type representing a week date as defined by [ISO 8601](https://en.wikipedia.org/wiki/ISO_week_date).
 
 Versions and stability
 ----------------------
 
-This package can be considered stable and ready to use. All releases follow the rules of 
+This package can be considered mostly stable but *not yet* ready to use. All releases follow the rules of 
 [semantic versioning](http://semver.org).
 
 Although the master branch is supposed to remain stable, there is not guarantee that braking changes will not
@@ -22,12 +22,28 @@ and have the following format `v1.0.0`.
 Dependencies
 ------------
 
-TBD
+### Build dependencies
+
+* `github.com/pkg/errors`
+
+### Test dependencies
+
+* `github.com/DATA-DOG/go-sqlmock`
+* `github.com/lib/pq` (integration tests only)
+* `github.com/stretchr/testify/...`
 
 Run unit and integration tests
 ------------------------------ 
 
-TBD
+Commands used for linting and testing:
+
+```
+gometalinter --config=.gometalinter.json .
+go test .
+
+# with integration tests (requires test db)
+go test -tags=integration .
+```
 
 License
 -------

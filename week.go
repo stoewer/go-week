@@ -1,4 +1,4 @@
-// Package week provides a simple data type representing a week date as defined by ISO 8691.
+// Package week provides a simple data type representing a week date as defined by ISO 8601.
 package week
 
 import (
