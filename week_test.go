@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 
@@ -283,5 +284,25 @@ func TestWeek_Scan(t *testing.T) {
 			require.NoError(t, err)
 			assert.Equal(t, tt.Expected, week)
 		}
+	}
+}
+
+func TestFromTime(t *testing.T) {
+
+	tests := []struct {
+		Original time.Time
+		Expected Week
+		Error    bool
+	}{
+		{Original: time.Date(2003, 12, 20, 1, 2, 3, 4, time.UTC), Expected: Week{year: 2003, week: 51}},
+		{Original: time.Date(2003, 12, 25, 0, 0, 0, 0, time.UTC), Expected: Week{year: 2003, week: 52}},
+		{Original: time.Date(2003, 12, 30, 0, 0, 0, 0, time.UTC), Expected: Week{year: 2004, week: 01}},
+		{Original: time.Date(2004, 1, 3, 0, 0, 0, 0, time.UTC), Expected: Week{year: 2004, week: 01}},
+		{Original: time.Date(2004, 12, 21, 0, 0, 0, 0, time.UTC), Expected: Week{year: 2004, week: 52}},
+		{Original: time.Date(2004, 12, 27, 0, 0, 0, 0, time.UTC), Expected: Week{year: 2004, week: 53}},
+	}
+
+	for _, tt := range tests {
+		assert.Equal(t, tt.Expected, FromTime(tt.Original))
 	}
 }
