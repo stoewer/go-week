@@ -3,6 +3,7 @@ package week
 
 import (
 	"database/sql/driver"
+	"time"
 
 	"github.com/pkg/errors"
 )
@@ -145,4 +146,10 @@ func (w *Week) Scan(src interface{}) error {
 	w.year, w.week = year, week
 
 	return nil
+}
+
+// FromTime converts time.Time into a Week
+func FromTime(t time.Time) Week {
+	year, week := t.ISOWeek()
+	return Week{year: year, week: week}
 }
