@@ -26,6 +26,16 @@ func New(year, week int) (Week, error) {
 	return Week{year: year, week: week}, nil
 }
 
+// Year returns the year of the ISO week date.
+func (w *Week) Year() int {
+	return w.year
+}
+
+// Week returns the week of the ISO week date.
+func (w *Week) Week() int {
+	return w.week
+}
+
 // Next calculates and returns the next week. If the next week is invalid (year > 9999) the function
 // returns an error.
 func (w *Week) Next() (Week, error) {
