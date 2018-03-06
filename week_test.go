@@ -24,6 +24,37 @@ func TestNew(t *testing.T) {
 	assert.Error(t, err)
 }
 
+func TestWeek_Year(t *testing.T) {
+
+	tests := []struct {
+		Week Week
+		ExpectedYear int
+	}{
+		{Week: Week{year: 1, week: 1}, ExpectedYear: 1},
+		{Week: Week{year: 2001, week: 1}, ExpectedYear: 2001},
+		{Week: Week{year: 9999, week: 1}, ExpectedYear: 9999},
+	}
+
+	for _, tt := range tests {
+		assert.Equal(t, tt.Week.Year(), tt.ExpectedYear)
+	}
+}
+
+func TestWeek_Week(t *testing.T) {
+	tests := []struct {
+		Week Week
+		ExpectedWeek int
+	}{
+		{Week: Week{year: 2001, week: 1}, ExpectedWeek: 1},
+		{Week: Week{year: 2001, week: 11}, ExpectedWeek: 11},
+		{Week: Week{year: 2001, week: 52}, ExpectedWeek: 52},
+	}
+
+	for _, tt := range tests {
+		assert.Equal(t, tt.Week.Week(), tt.ExpectedWeek)
+	}
+}
+
 func TestWeek_Next(t *testing.T) {
 
 	tests := []struct {
