@@ -163,3 +163,55 @@ func FromTime(t time.Time) Week {
 	year, week := t.ISOWeek()
 	return Week{year: year, week: week}
 }
+
+// Weekday represents day of the week in ISO: Monday is 1st and Sunday is 7th
+type Weekday int
+
+// Values of days of the week in ISO format
+const (
+	Monday Weekday = 1 + iota
+	Tuesday
+	Wednesday
+	Thursday
+	Friday
+	Saturday
+	Sunday
+)
+
+// Time converts week to time.Time of the specified weekday
+// Implementation based on the method on the ordinal day of the year and described here:
+// https://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year,_week_number_and_weekday
+func (w *Week) Time(weekday Weekday) time.Time {
+	jan4th := time.Date(w.Year(), 1, 4, 0, 0, 0, 0, time.UTC)
+	correction := int(convertGoWeekdayToISOWeekday(jan4th.Weekday())) + 3
+
+	ordinal := w.Week()*7 + int(weekday) - correction
+	year, ordinal := normalizeOrdinal(w.Year(), ordinal)
+
+	return time.Date(year, 1, ordinal, 0, 0, 0, 0, time.UTC)
+}
+
+func normalizeOrdinal(year, ordinal int) (normalizedYear, normalizedOrdinal int) {
+	daysInYear := 365
+	if ordinal < 1 {
+		if isLeapYear(year - 1) {
+			daysInYear = 366
+		}
+		return year - 1, daysInYear + ordinal
+	}
+
+	if isLeapYear(year) {
+		daysInYear = 366
+	}
+	if ordinal > daysInYear {
+		return year + 1, ordinal - daysInYear
+	}
+	return year, ordinal
+}
+
+func convertGoWeekdayToISOWeekday(goWeekday time.Weekday) Weekday {
+	if goWeekday == time.Sunday {
+		return Sunday
+	}
+	return Weekday(int(goWeekday))
+}
