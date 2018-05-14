@@ -359,7 +359,7 @@ func TestWeek_Time(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(fmt.Sprintf("%s", tt.expected), func(t *testing.T) {
+		t.Run(tt.expected.String(), func(t *testing.T) {
 			date := tt.isoWeek.Time(tt.weekDay)
 			assert.Equal(t, date, tt.expected)
 			assert.Equal(t, convertGoWeekdayToISOWeekday(date.Weekday()), tt.weekDay)
