@@ -178,7 +178,7 @@ const (
 	Sunday
 )
 
-// Time converts week to time.Time of the specified weekday
+// Time converts week to time.Time object which represents the midnight of the specified weekday.
 // Implementation based on the method on the ordinal day of the year and described here:
 // https://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year,_week_number_and_weekday
 func (w *Week) Time(weekday Weekday) time.Time {

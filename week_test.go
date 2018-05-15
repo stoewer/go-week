@@ -345,12 +345,12 @@ func TestWeek_Time(t *testing.T) {
 		expected time.Time
 	}{
 		{isoWeek: Week{year: 2000, week: 52}, expected: time.Date(2000, 12, 31, 0, 0, 0, 0, time.UTC), weekDay: Sunday},
-		{isoWeek: Week{year: 2001, week: 01}, expected: time.Date(2001, 1, 1, 0, 0, 0, 0, time.UTC), weekDay: Monday},
+		{isoWeek: Week{year: 2001, week: 1}, expected: time.Date(2001, 1, 1, 0, 0, 0, 0, time.UTC), weekDay: Monday},
 		{isoWeek: Week{year: 2003, week: 51}, expected: time.Date(2003, 12, 20, 0, 0, 0, 0, time.UTC), weekDay: Saturday},
 		{isoWeek: Week{year: 2003, week: 52}, expected: time.Date(2003, 12, 25, 0, 0, 0, 0, time.UTC), weekDay: Thursday},
-		{isoWeek: Week{year: 2004, week: 01}, expected: time.Date(2003, 12, 30, 0, 0, 0, 0, time.UTC), weekDay: Tuesday},
-		{isoWeek: Week{year: 2004, week: 01}, expected: time.Date(2003, 12, 31, 0, 0, 0, 0, time.UTC), weekDay: Wednesday},
-		{isoWeek: Week{year: 2004, week: 01}, expected: time.Date(2004, 1, 1, 0, 0, 0, 0, time.UTC), weekDay: Thursday},
+		{isoWeek: Week{year: 2004, week: 1}, expected: time.Date(2003, 12, 30, 0, 0, 0, 0, time.UTC), weekDay: Tuesday},
+		{isoWeek: Week{year: 2004, week: 1}, expected: time.Date(2003, 12, 31, 0, 0, 0, 0, time.UTC), weekDay: Wednesday},
+		{isoWeek: Week{year: 2004, week: 1}, expected: time.Date(2004, 1, 1, 0, 0, 0, 0, time.UTC), weekDay: Thursday},
 		{isoWeek: Week{year: 2004, week: 52}, expected: time.Date(2004, 12, 21, 0, 0, 0, 0, time.UTC), weekDay: Tuesday},
 		{isoWeek: Week{year: 2004, week: 53}, expected: time.Date(2004, 12, 27, 0, 0, 0, 0, time.UTC), weekDay: Monday},
 		{isoWeek: Week{year: 2004, week: 53}, expected: time.Date(2005, 1, 2, 0, 0, 0, 0, time.UTC), weekDay: Sunday},
