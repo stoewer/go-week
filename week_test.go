@@ -27,7 +27,7 @@ func TestNew(t *testing.T) {
 func TestWeek_Year(t *testing.T) {
 
 	tests := []struct {
-		Week Week
+		Week         Week
 		ExpectedYear int
 	}{
 		{Week: Week{year: 1, week: 1}, ExpectedYear: 1},
@@ -42,7 +42,7 @@ func TestWeek_Year(t *testing.T) {
 
 func TestWeek_Week(t *testing.T) {
 	tests := []struct {
-		Week Week
+		Week         Week
 		ExpectedWeek int
 	}{
 		{Week: Week{year: 2001, week: 1}, ExpectedWeek: 1},
@@ -335,5 +335,34 @@ func TestFromTime(t *testing.T) {
 
 	for _, tt := range tests {
 		assert.Equal(t, tt.Expected, FromTime(tt.Original))
+	}
+}
+
+func TestWeek_Time(t *testing.T) {
+	tests := []struct {
+		isoWeek  Week
+		weekDay  time.Weekday
+		expected time.Time
+	}{
+		{isoWeek: Week{year: 2000, week: 52}, expected: time.Date(2000, 12, 31, 0, 0, 0, 0, time.UTC), weekDay: time.Sunday},
+		{isoWeek: Week{year: 2001, week: 1}, expected: time.Date(2001, 1, 1, 0, 0, 0, 0, time.UTC), weekDay: time.Monday},
+		{isoWeek: Week{year: 2003, week: 51}, expected: time.Date(2003, 12, 20, 0, 0, 0, 0, time.UTC), weekDay: time.Saturday},
+		{isoWeek: Week{year: 2003, week: 52}, expected: time.Date(2003, 12, 25, 0, 0, 0, 0, time.UTC), weekDay: time.Thursday},
+		{isoWeek: Week{year: 2004, week: 1}, expected: time.Date(2003, 12, 30, 0, 0, 0, 0, time.UTC), weekDay: time.Tuesday},
+		{isoWeek: Week{year: 2004, week: 1}, expected: time.Date(2003, 12, 31, 0, 0, 0, 0, time.UTC), weekDay: time.Wednesday},
+		{isoWeek: Week{year: 2004, week: 1}, expected: time.Date(2004, 1, 1, 0, 0, 0, 0, time.UTC), weekDay: time.Thursday},
+		{isoWeek: Week{year: 2004, week: 52}, expected: time.Date(2004, 12, 21, 0, 0, 0, 0, time.UTC), weekDay: time.Tuesday},
+		{isoWeek: Week{year: 2004, week: 53}, expected: time.Date(2004, 12, 27, 0, 0, 0, 0, time.UTC), weekDay: time.Monday},
+		{isoWeek: Week{year: 2004, week: 53}, expected: time.Date(2005, 1, 2, 0, 0, 0, 0, time.UTC), weekDay: time.Sunday},
+		{isoWeek: Week{year: 2004, week: 53}, expected: time.Date(2004, 12, 31, 0, 0, 0, 0, time.UTC), weekDay: time.Friday},
+		{isoWeek: Week{year: 2008, week: 39}, expected: time.Date(2008, 9, 27, 0, 0, 0, 0, time.UTC), weekDay: time.Saturday},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.expected.String(), func(t *testing.T) {
+			date := tt.isoWeek.Time(tt.weekDay)
+			assert.Equal(t, date, tt.expected)
+			assert.Equal(t, date.Weekday(), tt.weekDay)
+		})
 	}
 }
