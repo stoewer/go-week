@@ -164,10 +164,10 @@ func FromTime(t time.Time) Week {
 	return Week{year: year, week: week}
 }
 
-// Time converts week to time.Time object which represents the midnight of the specified weekday.
-// Implementation based on the method on the ordinal day of the year and described here:
-// https://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year,_week_number_and_weekday
+// Time converts a week to a time.Time object which represents the midnight of the provided weekday.
 func (w *Week) Time(weekday time.Weekday) time.Time {
+	// The implementation based on the method on the ordinal day of the year and described here:
+	// https://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year,_week_number_and_weekday
 	isoWeekday := convertToISOWeekday(weekday)
 	jan4th := time.Date(w.Year(), 1, 4, 0, 0, 0, 0, time.UTC)
 	correction := convertToISOWeekday(jan4th.Weekday()) + 3
@@ -178,7 +178,7 @@ func (w *Week) Time(weekday time.Weekday) time.Time {
 	return time.Date(year, 1, ordinal, 0, 0, 0, 0, time.UTC)
 }
 
-// normailizeOrdinal checks if ordinal number is in range between 1 and actual number of days
+// normalizeOrdinal checks if ordinal number is in range between 1 and actual number of days
 // in the specified year. If its our of this range, values for the year and ordinal date
 // are adjusted
 func normalizeOrdinal(year, ordinal int) (normalizedYear, normalizedOrdinal int) {
