@@ -164,33 +164,23 @@ func FromTime(t time.Time) Week {
 	return Week{year: year, week: week}
 }
 
-// Weekday represents day of the week in ISO: Monday is 1st and Sunday is 7th
-type Weekday int
-
-// Values of days of the week in ISO format
-const (
-	Monday Weekday = 1 + iota
-	Tuesday
-	Wednesday
-	Thursday
-	Friday
-	Saturday
-	Sunday
-)
-
 // Time converts week to time.Time object which represents the midnight of the specified weekday.
 // Implementation based on the method on the ordinal day of the year and described here:
 // https://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year,_week_number_and_weekday
-func (w *Week) Time(weekday Weekday) time.Time {
+func (w *Week) Time(weekday time.Weekday) time.Time {
+	isoWeekday := convertToISOWeekday(weekday)
 	jan4th := time.Date(w.Year(), 1, 4, 0, 0, 0, 0, time.UTC)
-	correction := int(convertGoWeekdayToISOWeekday(jan4th.Weekday())) + 3
+	correction := convertToISOWeekday(jan4th.Weekday()) + 3
 
-	ordinal := w.Week()*7 + int(weekday) - correction
+	ordinal := w.Week()*7 + isoWeekday - correction
 	year, ordinal := normalizeOrdinal(w.Year(), ordinal)
 
 	return time.Date(year, 1, ordinal, 0, 0, 0, 0, time.UTC)
 }
 
+// normailizeOrdinal checks if ordinal number is in range between 1 and actual number of days
+// in the specified year. If its our of this range, values for the year and ordinal date
+// are adjusted
 func normalizeOrdinal(year, ordinal int) (normalizedYear, normalizedOrdinal int) {
 	daysInYear := 365
 	if ordinal < 1 {
@@ -209,9 +199,11 @@ func normalizeOrdinal(year, ordinal int) (normalizedYear, normalizedOrdinal int)
 	return year, ordinal
 }
 
-func convertGoWeekdayToISOWeekday(goWeekday time.Weekday) Weekday {
-	if goWeekday == time.Sunday {
-		return Sunday
+// convertToISOWeekday convert time.Weekday value to an ISO representation of weekday which declares
+// that the first day of the week is Monday=1 and last is Sunday=7
+func convertToISOWeekday(weekday time.Weekday) int {
+	if weekday == time.Sunday {
+		return 7
 	}
-	return Weekday(int(goWeekday))
+	return int(weekday)
 }
