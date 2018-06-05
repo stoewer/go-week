@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+	"math"
 )
 
 // Week represents a week date as defined by ISO 8601. Week can be marshaled to and unmarshaled from
@@ -39,26 +40,101 @@ func (w *Week) Week() int {
 // Next calculates and returns the next week. If the next week is invalid (year > 9999) the function
 // returns an error.
 func (w *Week) Next() (Week, error) {
-	var year, week int
-
-	if w.week >= weeksInYear(w.year) {
-		year, week = w.year+1, 1
-	} else {
-		year, week = w.year, w.week+1
-	}
-
-	return New(year, week)
+	return w.Add(1)
 }
 
 // Previous calculates and returns the previous week. If the previous week is invalid (year < 0) the
 // function returns an error.
 func (w *Week) Previous() (Week, error) {
-	var year, week int
+	return w.Subtract(1)
+}
 
-	if w.week <= 1 {
-		year, week = w.year-1, weeksInYear(w.year-1)
-	} else {
-		year, week = w.year, w.week-1
+// Add calculates and returns a week that is the given positive distance from the current week
+func (w *Week) Add(weeks int) (Week, error) {
+	return w.add(weeks)
+}
+
+// Subtract calculates and returns a week that is the given negative distance from the current week
+func (w *Week) Subtract(weeks int) (Week, error) {
+	return w.add(weeks * -1)
+}
+
+// Difference calculates the positive difference between this week and the given week
+func (w *Week) Difference(diffWeek *Week) int {
+	var (
+		diff = 0
+		yearDiff = diffWeek.year - w.year
+		direction = 1
+		smallerWeek = w
+		biggerWeek = diffWeek
+	)
+
+	if yearDiff != 0 {
+		direction = int(math.Sqrt(float64(yearDiff * yearDiff))) / yearDiff
+	}
+
+	if direction == -1 {
+		smallerWeek = diffWeek
+		biggerWeek = w
+	}
+
+	var (
+		yearA = smallerWeek.year
+		yearB = biggerWeek.year
+		weekA = smallerWeek.week
+		weekB = biggerWeek.week
+	)
+
+	for {
+		if yearA > yearB {
+			panic("infinite loop guard: yearA should never be more than yearB")
+		}
+
+		if yearA != yearB {
+			diff += weeksInYear(yearA)
+			yearA ++
+			continue
+		}
+
+		diff += weekB - weekA
+		break
+	}
+
+	return diff * direction
+}
+
+func (w *Week) add(weeksToAdd int) (Week, error) {
+	var sign = 1
+
+	if weeksToAdd < 0 {
+		sign = -1
+	}
+
+	var year = w.year
+	var week = w.week + weeksToAdd
+	var maxWeeks = weeksInYear(w.year)
+
+	for {
+		if week > maxWeeks || week < 0 {
+			year += sign
+
+			if sign == 1 {
+				week -= maxWeeks
+			}
+
+			maxWeeks = weeksInYear(year)
+
+			if sign == -1 {
+				week += maxWeeks
+			}
+		} else {
+			break
+		}
+	}
+
+	if week == 0 {
+		year += sign
+		week = weeksInYear(year)
 	}
 
 	return New(year, week)
