@@ -39,29 +39,72 @@ func (w *Week) Week() int {
 // Next calculates and returns the next week. If the next week is invalid (year > 9999) the function
 // returns an error.
 func (w *Week) Next() (Week, error) {
-	var year, week int
-
-	if w.week >= weeksInYear(w.year) {
-		year, week = w.year+1, 1
-	} else {
-		year, week = w.year, w.week+1
-	}
-
-	return New(year, week)
+	return w.Add(1)
 }
 
 // Previous calculates and returns the previous week. If the previous week is invalid (year < 0) the
 // function returns an error.
 func (w *Week) Previous() (Week, error) {
-	var year, week int
+	return w.Add(-1)
+}
 
-	if w.week <= 1 {
-		year, week = w.year-1, weeksInYear(w.year-1)
-	} else {
-		year, week = w.year, w.week-1
+// Add calculates and returns a week that is the given positive distance (number of weeks) from the current week
+func (w *Week) Add(weeks int) (Week, error) {
+	sign := 1
+
+	if weeks < 0 {
+		sign = -1
+	}
+
+	year := w.year
+	week := w.week + weeks
+	maxWeeks := weeksInYear(w.year)
+
+	for {
+		if week <= maxWeeks && week >= 0 {
+			break
+		}
+
+		year += sign
+
+		if sign == 1 {
+			week -= maxWeeks
+		}
+
+		maxWeeks = weeksInYear(year)
+
+		if sign == -1 {
+			week += maxWeeks
+		}
+	}
+
+	if week == 0 {
+		year += sign
+		week = weeksInYear(year)
 	}
 
 	return New(year, week)
+}
+
+// Sub calculates the positive difference between w and u (u-w) in number of weeks
+func (w *Week) Sub(u *Week) int {
+	direction := 1
+	smaller := w
+	bigger := u
+
+	if smaller.year > bigger.year {
+		direction = -1
+		smaller, bigger = bigger, smaller
+	}
+
+	weeks := 0
+	for year := smaller.year; year < bigger.year; year++ {
+		weeks += weeksInYear(year)
+	}
+
+	weeks += bigger.week - smaller.week
+
+	return weeks * direction
 }
 
 // UnmarshalJSON implements json.Unmarshaler for Week.
