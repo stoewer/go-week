@@ -3,10 +3,10 @@ package week
 
 import (
 	"database/sql/driver"
+	"math"
 	"time"
 
 	"github.com/pkg/errors"
-	"math"
 )
 
 // Week represents a week date as defined by ISO 8601. Week can be marshaled to and unmarshaled from
@@ -46,35 +46,30 @@ func (w *Week) Next() (Week, error) {
 // Previous calculates and returns the previous week. If the previous week is invalid (year < 0) the
 // function returns an error.
 func (w *Week) Previous() (Week, error) {
-	return w.Subtract(1)
+	return w.Add(-1)
 }
 
-// Add calculates and returns a week that is the given positive distance from the current week
+// Add calculates and returns a week that is the given positive distance (number of weeks) from the current week
 func (w *Week) Add(weeks int) (Week, error) {
 	return w.add(weeks)
 }
 
-// Subtract calculates and returns a week that is the given negative distance from the current week
-func (w *Week) Subtract(weeks int) (Week, error) {
-	return w.add(weeks * -1)
-}
-
-// Difference calculates the positive difference between this week and the given week
-func (w *Week) Difference(diffWeek *Week) int {
+// Sub calculates the positive difference between w and u (u-w) in number of weeks
+func (w *Week) Sub(u *Week) int {
 	var (
-		diff = 0
-		yearDiff = diffWeek.year - w.year
-		direction = 1
+		diff        = 0
+		yearDiff    = u.year - w.year
+		direction   = 1
 		smallerWeek = w
-		biggerWeek = diffWeek
+		biggerWeek  = u
 	)
 
 	if yearDiff != 0 {
-		direction = int(math.Sqrt(float64(yearDiff * yearDiff))) / yearDiff
+		direction = int(math.Sqrt(float64(yearDiff*yearDiff))) / yearDiff
 	}
 
 	if direction == -1 {
-		smallerWeek = diffWeek
+		smallerWeek = u
 		biggerWeek = w
 	}
 
@@ -92,7 +87,7 @@ func (w *Week) Difference(diffWeek *Week) int {
 
 		if yearA != yearB {
 			diff += weeksInYear(yearA)
-			yearA ++
+			yearA++
 			continue
 		}
 

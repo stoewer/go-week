@@ -110,8 +110,8 @@ func TestWeek_Add(t *testing.T) {
 
 	tests := []struct {
 		Curr  Week
-		Add int
-		Res  Week
+		Add   int
+		Res   Week
 		Error bool
 	}{
 		{Curr: Week{year: 2004, week: 01}, Add: 3, Res: Week{year: 2004, week: 4}},
@@ -119,6 +119,14 @@ func TestWeek_Add(t *testing.T) {
 		{Curr: Week{year: 2003, week: 52}, Add: 1, Res: Week{year: 2004, week: 1}},
 		{Curr: Week{year: 2005, week: 01}, Add: 120, Res: Week{year: 2007, week: 17}},
 		{Curr: Week{year: 2004, week: 53}, Add: -60, Res: Week{year: 2003, week: 45}},
+
+		{Curr: Week{year: 2004, week: 01}, Add: -3, Res: Week{year: 2003, week: 50}},
+		{Curr: Week{year: 2004, week: 03}, Add: -3, Res: Week{year: 2003, week: 52}},
+		{Curr: Week{year: 2003, week: 52}, Add: -20, Res: Week{year: 2003, week: 32}},
+		{Curr: Week{year: 2005, week: 01}, Add: -120, Res: Week{year: 2002, week: 38}},
+		{Curr: Week{year: 2004, week: 53}, Add: 60, Res: Week{year: 2006, week: 8}},
+		{Curr: Week{year: 9999, week: 52}, Add: 1, Error: true},
+
 		{Curr: Week{year: 9999, week: 52}, Add: 1, Error: true},
 		{Curr: Week{year: 0, week: 01}, Add: -1, Error: true},
 	}
@@ -134,35 +142,7 @@ func TestWeek_Add(t *testing.T) {
 	}
 }
 
-func TestWeek_Subtract(t *testing.T) {
-
-	tests := []struct {
-		Curr  Week
-		Sub int
-		Res  Week
-		Error bool
-	}{
-		{Curr: Week{year: 2004, week: 01}, Sub: 3, Res: Week{year: 2003, week: 50}},
-		{Curr: Week{year: 2004, week: 03}, Sub: 3, Res: Week{year: 2003, week: 52}},
-		{Curr: Week{year: 2003, week: 52}, Sub: 20, Res: Week{year: 2003, week: 32}},
-		{Curr: Week{year: 2005, week: 01}, Sub: 120, Res: Week{year: 2002, week: 38}},
-		{Curr: Week{year: 2004, week: 53}, Sub: -60, Res: Week{year: 2006, week: 8}},
-		{Curr: Week{year: 9999, week: 52}, Sub: -1, Error: true},
-		{Curr: Week{year: 0, week: 01}, Sub: 1, Error: true},
-	}
-
-	for _, tt := range tests {
-		prev, err := tt.Curr.Subtract(tt.Sub)
-		if tt.Error {
-			assert.Error(t, err)
-		} else {
-			require.NoError(t, err)
-			assert.Equal(t, tt.Res, prev)
-		}
-	}
-}
-
-func TestWeek_Difference(t *testing.T) {
+func TestWeek_Sub(t *testing.T) {
 
 	tests := []struct {
 		Curr  Week
@@ -183,7 +163,7 @@ func TestWeek_Difference(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		diff := tt.Curr.Difference(&tt.Sub)
+		diff := tt.Curr.Sub(&tt.Sub)
 		assert.Equal(t, tt.Diff, diff)
 	}
 }
