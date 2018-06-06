@@ -3,7 +3,6 @@ package week
 
 import (
 	"database/sql/driver"
-	"math"
 	"time"
 
 	"github.com/pkg/errors"
@@ -51,79 +50,31 @@ func (w *Week) Previous() (Week, error) {
 
 // Add calculates and returns a week that is the given positive distance (number of weeks) from the current week
 func (w *Week) Add(weeks int) (Week, error) {
-	return w.add(weeks)
-}
+	sign := 1
 
-// Sub calculates the positive difference between w and u (u-w) in number of weeks
-func (w *Week) Sub(u *Week) int {
-	var (
-		diff        = 0
-		yearDiff    = u.year - w.year
-		direction   = 1
-		smallerWeek = w
-		biggerWeek  = u
-	)
-
-	if yearDiff != 0 {
-		direction = int(math.Sqrt(float64(yearDiff*yearDiff))) / yearDiff
-	}
-
-	if direction == -1 {
-		smallerWeek = u
-		biggerWeek = w
-	}
-
-	var (
-		yearA = smallerWeek.year
-		yearB = biggerWeek.year
-		weekA = smallerWeek.week
-		weekB = biggerWeek.week
-	)
-
-	for {
-		if yearA > yearB {
-			panic("infinite loop guard: yearA should never be more than yearB")
-		}
-
-		if yearA != yearB {
-			diff += weeksInYear(yearA)
-			yearA++
-			continue
-		}
-
-		diff += weekB - weekA
-		break
-	}
-
-	return diff * direction
-}
-
-func (w *Week) add(weeksToAdd int) (Week, error) {
-	var sign = 1
-
-	if weeksToAdd < 0 {
+	if weeks < 0 {
 		sign = -1
 	}
 
-	var year = w.year
-	var week = w.week + weeksToAdd
-	var maxWeeks = weeksInYear(w.year)
+	year := w.year
+	week := w.week + weeks
+	maxWeeks := weeksInYear(w.year)
 
 	for {
-		if week > maxWeeks || week < 0 {
-			year += sign
-
-			if sign == 1 {
-				week -= maxWeeks
-			}
-
-			maxWeeks = weeksInYear(year)
-
-			if sign == -1 {
-				week += maxWeeks
-			}
-		} else {
+		if week <= maxWeeks && week >= 0 {
 			break
+		}
+
+		year += sign
+
+		if sign == 1 {
+			week -= maxWeeks
+		}
+
+		maxWeeks = weeksInYear(year)
+
+		if sign == -1 {
+			week += maxWeeks
 		}
 	}
 
@@ -133,6 +84,27 @@ func (w *Week) add(weeksToAdd int) (Week, error) {
 	}
 
 	return New(year, week)
+}
+
+// Sub calculates the positive difference between w and u (u-w) in number of weeks
+func (w *Week) Sub(u *Week) int {
+	direction := 1
+	smaller := w
+	bigger := u
+
+	if smaller.year > bigger.year {
+		direction = -1
+		smaller, bigger = bigger, smaller
+	}
+
+	weeks := 0
+	for year := smaller.year; year < bigger.year; year++ {
+		weeks += weeksInYear(year)
+	}
+
+	weeks += bigger.week - smaller.week
+
+	return weeks * direction
 }
 
 // UnmarshalJSON implements json.Unmarshaler for Week.
