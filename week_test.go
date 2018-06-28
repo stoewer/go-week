@@ -150,16 +150,17 @@ func TestWeek_Sub(t *testing.T) {
 		Diff  int
 		Error bool
 	}{
-		{Curr: Week{year: 2004, week: 01}, Diff: -3, Sub: Week{year: 2003, week: 50}},
-		{Curr: Week{year: 2004, week: 03}, Diff: -3, Sub: Week{year: 2003, week: 52}},
-		{Curr: Week{year: 2003, week: 52}, Diff: -20, Sub: Week{year: 2003, week: 32}},
-		{Curr: Week{year: 2005, week: 01}, Diff: -120, Sub: Week{year: 2002, week: 38}},
-		{Curr: Week{year: 2004, week: 53}, Diff: 60, Sub: Week{year: 2006, week: 8}},
-		{Curr: Week{year: 2004, week: 01}, Diff: 3, Sub: Week{year: 2004, week: 4}},
-		{Curr: Week{year: 2003, week: 52}, Diff: 20, Sub: Week{year: 2004, week: 20}},
-		{Curr: Week{year: 2003, week: 52}, Diff: 1, Sub: Week{year: 2004, week: 1}},
-		{Curr: Week{year: 2005, week: 01}, Diff: 120, Sub: Week{year: 2007, week: 17}},
-		{Curr: Week{year: 2004, week: 53}, Diff: -60, Sub: Week{year: 2003, week: 45}},
+		{Curr: Week{year: 2004, week: 01}, Diff: 3, Sub: Week{year: 2003, week: 50}},
+		{Curr: Week{year: 2004, week: 03}, Diff: 3, Sub: Week{year: 2003, week: 52}},
+		{Curr: Week{year: 2003, week: 52}, Diff: 20, Sub: Week{year: 2003, week: 32}},
+		{Curr: Week{year: 2005, week: 01}, Diff: 120, Sub: Week{year: 2002, week: 38}},
+		{Curr: Week{year: 2005, week: 01}, Diff: 0, Sub: Week{year: 2005, week: 01}},
+		{Curr: Week{year: 2004, week: 53}, Diff: -60, Sub: Week{year: 2006, week: 8}},
+		{Curr: Week{year: 2004, week: 01}, Diff: -3, Sub: Week{year: 2004, week: 4}},
+		{Curr: Week{year: 2003, week: 52}, Diff: -20, Sub: Week{year: 2004, week: 20}},
+		{Curr: Week{year: 2003, week: 52}, Diff: -1, Sub: Week{year: 2004, week: 1}},
+		{Curr: Week{year: 2005, week: 01}, Diff: -120, Sub: Week{year: 2007, week: 17}},
+		{Curr: Week{year: 2004, week: 53}, Diff: 60, Sub: Week{year: 2003, week: 45}},
 	}
 
 	for _, tt := range tests {
