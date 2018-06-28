@@ -86,11 +86,11 @@ func (w *Week) Add(weeks int) (Week, error) {
 	return New(year, week)
 }
 
-// Sub calculates the positive difference between w and u (u-w) in number of weeks
+// Sub calculates the positive difference between w and u (w-u) in number of weeks
 func (w *Week) Sub(u *Week) int {
 	direction := 1
-	smaller := w
-	bigger := u
+	smaller := u
+	bigger := w
 
 	if smaller.year > bigger.year {
 		direction = -1
