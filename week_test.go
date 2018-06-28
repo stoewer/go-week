@@ -164,8 +164,86 @@ func TestWeek_Sub(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		diff := tt.Curr.Sub(&tt.Sub)
+		diff := tt.Curr.Sub(tt.Sub)
 		assert.Equal(t, tt.Diff, diff)
+	}
+}
+
+func TestWeek_After(t *testing.T) {
+
+	tests := []struct {
+		Curr Week
+		Sub  Week
+		Res  bool
+	}{
+		{Curr: Week{year: 2004, week: 01}, Res: true, Sub: Week{year: 2003, week: 50}},
+		{Curr: Week{year: 2004, week: 03}, Res: true, Sub: Week{year: 2003, week: 52}},
+		{Curr: Week{year: 2003, week: 52}, Res: true, Sub: Week{year: 2003, week: 32}},
+		{Curr: Week{year: 2005, week: 01}, Res: true, Sub: Week{year: 2002, week: 38}},
+		{Curr: Week{year: 2005, week: 01}, Res: false, Sub: Week{year: 2005, week: 01}},
+		{Curr: Week{year: 2004, week: 53}, Res: false, Sub: Week{year: 2006, week: 8}},
+		{Curr: Week{year: 2004, week: 01}, Res: false, Sub: Week{year: 2004, week: 4}},
+		{Curr: Week{year: 2003, week: 52}, Res: false, Sub: Week{year: 2004, week: 20}},
+		{Curr: Week{year: 2003, week: 52}, Res: false, Sub: Week{year: 2004, week: 1}},
+		{Curr: Week{year: 2005, week: 01}, Res: false, Sub: Week{year: 2007, week: 17}},
+		{Curr: Week{year: 2004, week: 53}, Res: true, Sub: Week{year: 2003, week: 45}},
+	}
+
+	for _, tt := range tests {
+		diff := tt.Curr.After(tt.Sub)
+		assert.Equal(t, tt.Res, diff)
+	}
+}
+
+func TestWeek_Before(t *testing.T) {
+
+	tests := []struct {
+		Curr Week
+		Sub  Week
+		Res  bool
+	}{
+		{Curr: Week{year: 2004, week: 01}, Res: false, Sub: Week{year: 2003, week: 50}},
+		{Curr: Week{year: 2004, week: 03}, Res: false, Sub: Week{year: 2003, week: 52}},
+		{Curr: Week{year: 2003, week: 52}, Res: false, Sub: Week{year: 2003, week: 32}},
+		{Curr: Week{year: 2005, week: 01}, Res: false, Sub: Week{year: 2002, week: 38}},
+		{Curr: Week{year: 2005, week: 01}, Res: false, Sub: Week{year: 2005, week: 01}},
+		{Curr: Week{year: 2004, week: 53}, Res: true, Sub: Week{year: 2006, week: 8}},
+		{Curr: Week{year: 2004, week: 01}, Res: true, Sub: Week{year: 2004, week: 4}},
+		{Curr: Week{year: 2003, week: 52}, Res: true, Sub: Week{year: 2004, week: 20}},
+		{Curr: Week{year: 2003, week: 52}, Res: true, Sub: Week{year: 2004, week: 1}},
+		{Curr: Week{year: 2005, week: 01}, Res: true, Sub: Week{year: 2007, week: 17}},
+		{Curr: Week{year: 2004, week: 53}, Res: false, Sub: Week{year: 2003, week: 45}},
+	}
+
+	for _, tt := range tests {
+		diff := tt.Curr.Before(tt.Sub)
+		assert.Equal(t, tt.Res, diff)
+	}
+}
+
+func TestWeek_Equal(t *testing.T) {
+
+	tests := []struct {
+		Curr Week
+		Sub  Week
+		Res  bool
+	}{
+		{Curr: Week{year: 2004, week: 01}, Res: false, Sub: Week{year: 2003, week: 50}},
+		{Curr: Week{year: 2004, week: 03}, Res: false, Sub: Week{year: 2003, week: 52}},
+		{Curr: Week{year: 2003, week: 52}, Res: false, Sub: Week{year: 2003, week: 32}},
+		{Curr: Week{year: 2005, week: 01}, Res: false, Sub: Week{year: 2002, week: 38}},
+		{Curr: Week{year: 2005, week: 01}, Res: true, Sub: Week{year: 2005, week: 01}},
+		{Curr: Week{year: 2004, week: 53}, Res: true, Sub: Week{year: 2004, week: 53}},
+		{Curr: Week{year: 2004, week: 36}, Res: true, Sub: Week{year: 2004, week: 36}},
+		{Curr: Week{year: 2003, week: 52}, Res: false, Sub: Week{year: 2004, week: 20}},
+		{Curr: Week{year: 2003, week: 52}, Res: false, Sub: Week{year: 2004, week: 1}},
+		{Curr: Week{year: 2005, week: 01}, Res: false, Sub: Week{year: 2007, week: 17}},
+		{Curr: Week{year: 2004, week: 53}, Res: false, Sub: Week{year: 2003, week: 45}},
+	}
+
+	for _, tt := range tests {
+		diff := tt.Curr.Equal(tt.Sub)
+		assert.Equal(t, tt.Res, diff)
 	}
 }
 
