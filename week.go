@@ -87,10 +87,10 @@ func (w *Week) Add(weeks int) (Week, error) {
 }
 
 // Sub calculates the positive difference between w and u (w-u) in number of weeks
-func (w *Week) Sub(u *Week) int {
+func (w *Week) Sub(u Week) int {
 	direction := 1
 	smaller := u
-	bigger := w
+	bigger := *w
 
 	if smaller.year > bigger.year {
 		direction = -1
@@ -105,6 +105,21 @@ func (w *Week) Sub(u *Week) int {
 	weeks += bigger.week - smaller.week
 
 	return weeks * direction
+}
+
+// After reports whether the week instant w is after u
+func (w *Week) After(u Week) bool {
+	return w.Sub(u) > 0
+}
+
+// Before reports whether the week w is before u
+func (w *Week) Before(u Week) bool {
+	return w.Sub(u) < 0
+}
+
+// Equal reports whether w and u are the same week of the same year
+func (w *Week) Equal(u Week) bool {
+	return *w == u
 }
 
 // UnmarshalJSON implements json.Unmarshaler for Week.
