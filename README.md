@@ -11,7 +11,7 @@ The package `go-week` provides a simple data type representing a week date as de
 Versions and stability
 ----------------------
 
-This package can be considered stable but and ready to use. All releases follow the rules of 
+This package can be considered stable and ready to use. All releases follow the rules of 
 [semantic versioning](http://semver.org).
 
 Although the master branch is supposed to remain stable, there is not guarantee that braking changes will not
@@ -42,8 +42,6 @@ loaded to the vendor directory first and gometalinter itself must run disabled m
 go mod vendor
 GO111MODULE=off gometalinter --config=.gometalinter.json --deadline=10m .
 ```
-
-Note: the command `go mod vendor` will rearrange modules in `go.mod`. Please don't commit those changes.
 
 To run the test use the following commands:
 
