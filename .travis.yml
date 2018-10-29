@@ -7,8 +7,8 @@ env:
 - GO111MODULE=on
 
 install:
-- go get -u github.com/alecthomas/gometalinter
-- gometalinter --install
+- GO111MODULE=off go get github.com/alecthomas/gometalinter
+- GO111MODULE=off gometalinter --install --force
 - go get github.com/mattn/goveralls
 
 services:
