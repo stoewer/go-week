@@ -1,19 +1,15 @@
 language: go
 
 go:
-- '1.9'
-- '1.10'
+- '1.11'
+
+env:
+- GO111MODULE=on
 
 install:
-# tools
 - go get -u github.com/alecthomas/gometalinter
 - gometalinter --install
 - go get github.com/mattn/goveralls
-# dependencies
-- go get github.com/pkg/errors
-- go get github.com/stretchr/testify/...
-- go get github.com/DATA-DOG/go-sqlmock
-- go get github.com/lib/pq
 
 services:
 - postgresql
@@ -22,8 +18,9 @@ before_script:
 - psql -U postgres -c "ALTER ROLE postgres WITH PASSWORD 'postgres';"
 
 script:
-- gometalinter --config=.gometalinter.json --deadline=10m .
-- go test -v -tags=integration -covermode=count -coverprofile=profile.cov .
+- go mod vendor -v
+- GO111MODULE=off gometalinter --config=.gometalinter.json --deadline=10m .
+- go test -mod=readonly -v -tags=integration -coverprofile=profile.cov ./...
 
 after_success:
 - goveralls -coverprofile=profile.cov -service=travis-ci
