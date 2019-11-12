@@ -19,7 +19,7 @@ func TestNew(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, Week{year: 0, week: 1}, week)
 
-	week, err = New(-1, 0)
+	_, err = New(-1, 0)
 
 	assert.Error(t, err)
 }
@@ -485,18 +485,66 @@ func TestWeek_Time(t *testing.T) {
 		weekDay  time.Weekday
 		expected time.Time
 	}{
-		{isoWeek: Week{year: 2000, week: 52}, expected: time.Date(2000, 12, 31, 0, 0, 0, 0, time.UTC), weekDay: time.Sunday},
-		{isoWeek: Week{year: 2001, week: 1}, expected: time.Date(2001, 1, 1, 0, 0, 0, 0, time.UTC), weekDay: time.Monday},
-		{isoWeek: Week{year: 2003, week: 51}, expected: time.Date(2003, 12, 20, 0, 0, 0, 0, time.UTC), weekDay: time.Saturday},
-		{isoWeek: Week{year: 2003, week: 52}, expected: time.Date(2003, 12, 25, 0, 0, 0, 0, time.UTC), weekDay: time.Thursday},
-		{isoWeek: Week{year: 2004, week: 1}, expected: time.Date(2003, 12, 30, 0, 0, 0, 0, time.UTC), weekDay: time.Tuesday},
-		{isoWeek: Week{year: 2004, week: 1}, expected: time.Date(2003, 12, 31, 0, 0, 0, 0, time.UTC), weekDay: time.Wednesday},
-		{isoWeek: Week{year: 2004, week: 1}, expected: time.Date(2004, 1, 1, 0, 0, 0, 0, time.UTC), weekDay: time.Thursday},
-		{isoWeek: Week{year: 2004, week: 52}, expected: time.Date(2004, 12, 21, 0, 0, 0, 0, time.UTC), weekDay: time.Tuesday},
-		{isoWeek: Week{year: 2004, week: 53}, expected: time.Date(2004, 12, 27, 0, 0, 0, 0, time.UTC), weekDay: time.Monday},
-		{isoWeek: Week{year: 2004, week: 53}, expected: time.Date(2005, 1, 2, 0, 0, 0, 0, time.UTC), weekDay: time.Sunday},
-		{isoWeek: Week{year: 2004, week: 53}, expected: time.Date(2004, 12, 31, 0, 0, 0, 0, time.UTC), weekDay: time.Friday},
-		{isoWeek: Week{year: 2008, week: 39}, expected: time.Date(2008, 9, 27, 0, 0, 0, 0, time.UTC), weekDay: time.Saturday},
+		{
+			isoWeek:  Week{year: 2000, week: 52},
+			expected: time.Date(2000, 12, 31, 0, 0, 0, 0, time.UTC),
+			weekDay:  time.Sunday,
+		},
+		{
+			isoWeek:  Week{year: 2001, week: 1},
+			expected: time.Date(2001, 1, 1, 0, 0, 0, 0, time.UTC),
+			weekDay:  time.Monday,
+		},
+		{
+			isoWeek:  Week{year: 2003, week: 51},
+			expected: time.Date(2003, 12, 20, 0, 0, 0, 0, time.UTC),
+			weekDay:  time.Saturday,
+		},
+		{
+			isoWeek:  Week{year: 2003, week: 52},
+			expected: time.Date(2003, 12, 25, 0, 0, 0, 0, time.UTC),
+			weekDay:  time.Thursday,
+		},
+		{
+			isoWeek:  Week{year: 2004, week: 1},
+			expected: time.Date(2003, 12, 30, 0, 0, 0, 0, time.UTC),
+			weekDay:  time.Tuesday,
+		},
+		{
+			isoWeek:  Week{year: 2004, week: 1},
+			expected: time.Date(2003, 12, 31, 0, 0, 0, 0, time.UTC),
+			weekDay:  time.Wednesday,
+		},
+		{
+			isoWeek:  Week{year: 2004, week: 1},
+			expected: time.Date(2004, 1, 1, 0, 0, 0, 0, time.UTC),
+			weekDay:  time.Thursday,
+		},
+		{
+			isoWeek:  Week{year: 2004, week: 52},
+			expected: time.Date(2004, 12, 21, 0, 0, 0, 0, time.UTC),
+			weekDay:  time.Tuesday,
+		},
+		{
+			isoWeek:  Week{year: 2004, week: 53},
+			expected: time.Date(2004, 12, 27, 0, 0, 0, 0, time.UTC),
+			weekDay:  time.Monday,
+		},
+		{
+			isoWeek:  Week{year: 2004, week: 53},
+			expected: time.Date(2005, 1, 2, 0, 0, 0, 0, time.UTC),
+			weekDay:  time.Sunday,
+		},
+		{
+			isoWeek:  Week{year: 2004, week: 53},
+			expected: time.Date(2004, 12, 31, 0, 0, 0, 0, time.UTC),
+			weekDay:  time.Friday,
+		},
+		{
+			isoWeek:  Week{year: 2008, week: 39},
+			expected: time.Date(2008, 9, 27, 0, 0, 0, 0, time.UTC),
+			weekDay:  time.Saturday,
+		},
 	}
 
 	for _, tt := range tests {
