@@ -1,6 +1,0 @@
-{
-    "Disable": [
-        "ineffassign"
-    ],
-    "Exclude": []
-}
