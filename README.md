@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/stoewer/go-week.svg?branch=master)](https://travis-ci.org/stoewer/go-week)
-[![Coverage Status](https://coveralls.io/repos/github/stoewer/go-week/badge.svg?branch=master)](https://coveralls.io/github/stoewer/go-week?branch=master)
+[![CircleCI](https://circleci.com/gh/stoewer/go-week.svg?style=svg)](https://circleci.com/gh/stoewer/go-week)
+[![codecov](https://codecov.io/gh/stoewer/go-week/branch/master/graph/badge.svg)](https://codecov.io/gh/stoewer/go-week)
 [![GoDoc](https://godoc.org/github.com/stoewer/go-week?status.svg)](https://godoc.org/github.com/stoewer/go-week)
 ---
 
