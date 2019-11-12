@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/stoewer/go-week.svg?style=svg)](https://circleci.com/gh/stoewer/go-week)
+[![CircleCI](https://circleci.com/gh/stoewer/go-week/tree/master.svg?style=svg)](https://circleci.com/gh/stoewer/go-week/tree/master)
 [![codecov](https://codecov.io/gh/stoewer/go-week/branch/master/graph/badge.svg)](https://codecov.io/gh/stoewer/go-week)
 [![GoDoc](https://godoc.org/github.com/stoewer/go-week?status.svg)](https://godoc.org/github.com/stoewer/go-week)
 ---
@@ -35,22 +35,16 @@ Dependencies
 Run unit and integration tests
 ------------------------------ 
 
-Since some of the linters ran by gometalinter don't support go modules yet, all dependencies have to be
-loaded to the vendor directory first and gometalinter itself must run disabled module support:
+To run the code analysis and tests, use the following commands:
 
 ```
-go mod vendor
-GO111MODULE=off gometalinter --config=.gometalinter.json --deadline=10m .
-```
+golangci-lint run -v --config .golangci.yml ./...
 
-To run the test use the following commands:
-
-```
 # without integration tests
-go test .
+go test ./...
 
 # with integration tests (requires test db)
-go test -tags=integration .
+go test -tags=integration ./...
 ```
 
 License
