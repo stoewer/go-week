@@ -555,3 +555,46 @@ func TestWeek_Time(t *testing.T) {
 		})
 	}
 }
+
+func TestWeek_String(t *testing.T) {
+	t.Run("success", func(t *testing.T) {
+		tests := []struct {
+			Week     Week
+			Expected string
+		}{
+			{Week: Week{year: 1, week: 1}, Expected: "0001-W01"},
+			{Week: Week{year: 2001, week: 22}, Expected: "2001-W22"},
+			{Week: Week{year: 9999, week: 52}, Expected: "9999-W52"},
+		}
+
+		for _, tt := range tests {
+			result := tt.Week.String()
+
+			assert.Equal(t, tt.Expected, result)
+		}
+	})
+
+	t.Run("panic on invalid year", func(t *testing.T) {
+		defer func() {
+			if r := recover(); r == nil {
+				t.Errorf("The code did not panic")
+			}
+		}()
+
+		w := Week{year: -100, week: 22}
+
+		_ = w.String()
+	})
+
+	t.Run("panic on invalid week", func(t *testing.T) {
+		defer func() {
+			if r := recover(); r == nil {
+				t.Errorf("The code did not panic")
+			}
+		}()
+
+		w := Week{year: 2001, week: 99}
+
+		_ = w.String()
+	})
+}

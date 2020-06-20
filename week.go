@@ -3,6 +3,7 @@ package week
 
 import (
 	"database/sql/driver"
+	"fmt"
 	"time"
 
 	"github.com/pkg/errors"
@@ -264,4 +265,14 @@ func convertToISOWeekday(weekday time.Weekday) int {
 		return 7
 	}
 	return int(weekday)
+}
+
+// String converts a Week into its string representation
+func (w Week) String() string {
+	err := checkYearAndWeek(w.year, w.week)
+	if err != nil {
+		panic(err)
+	}
+
+	return fmt.Sprintf(weekDateFormat, w.year, w.week)
 }
