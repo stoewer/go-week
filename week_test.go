@@ -420,7 +420,7 @@ func TestWeek_Value(t *testing.T) {
 			assert.Error(t, err)
 		} else {
 			require.NoError(t, err)
-			assert.Equal(t, []byte(tt.Expected), result)
+			assert.Equal(t, tt.Expected, result)
 		}
 	}
 }
