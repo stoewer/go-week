@@ -189,7 +189,7 @@ func (w Week) Value() (driver.Value, error) {
 		return nil, errors.Wrap(err, "unable to create value")
 	}
 
-	return driver.Value(text), nil
+	return driver.Value(string(text)), nil
 }
 
 // Scan implements scanner for Week.

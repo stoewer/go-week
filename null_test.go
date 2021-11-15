@@ -218,9 +218,9 @@ func TestNullWeek_Value(t *testing.T) {
 		Expected interface{}
 		Error    bool
 	}{
-		{Week: NullWeek{Week: Week{year: 1, week: 1}, Valid: true}, Expected: []byte("0001-W01")},
-		{Week: NullWeek{Week: Week{year: 2001, week: 22}, Valid: true}, Expected: []byte("2001-W22")},
-		{Week: NullWeek{Week: Week{year: 9999, week: 52}, Valid: true}, Expected: []byte("9999-W52")},
+		{Week: NullWeek{Week: Week{year: 1, week: 1}, Valid: true}, Expected: "0001-W01"},
+		{Week: NullWeek{Week: Week{year: 2001, week: 22}, Valid: true}, Expected: "2001-W22"},
+		{Week: NullWeek{Week: Week{year: 9999, week: 52}, Valid: true}, Expected: "9999-W52"},
 		{Week: NullWeek{}, Expected: nil},
 		{Week: NullWeek{Week: Week{year: -100, week: 22}, Valid: true}, Error: true},
 	}
